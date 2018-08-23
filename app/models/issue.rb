@@ -2,7 +2,7 @@ class Issue < ApplicationRecord
   belongs_to :reporter, class_name: 'User', foreign_key: :reporter_id
   belongs_to :assignee, class_name: 'User', foreign_key: :assignee_id
 
-  scope :filter, ->(params) {
+  scope :filter, lambda { |params|
     relation = where nil
     relation = relation.where('"summary" LIKE ?', "%#{params[:issue_summary]}%") if params[:issue_summary].present?
     relation = relation.joins('INNER JOIN "users" "reporters" ON "reporters"."id" = "issues"."reporter_id"').where(reporters: { name: params[:reporter_name] }) if params[:reporter_name].present?
